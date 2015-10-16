@@ -8,7 +8,7 @@
 #include <WinAPISys.au3>
 #include <WinAPI.au3>
 #include <Sound.au3>
-#include <SoundGetSetQuery.au3>
+#include <_AudioEndpointVolume.au3>
 
 Const $maxVolume = 100	; from 0 to 100
 Const $intervalCheckingTime = 500	; milliseconds
@@ -19,11 +19,7 @@ Const $sTrayIcon = "assets/AlarmOnACDisconnect.ico"
 Global $gui, $iWidth, $iHeight, $msgCtrlID
 Global $isActive=False, $isArmed=False, $isBlinkOn=False
 Global $alarmSound, $alarmSoundLength=Null
-
-Global $preMasterVolume = _SoundGetMasterVolume()
-Global $preMasterMute = _SoundGetMasterMute()
-Global $preWaveVolume = _SoundGetWaveVolume()
-Global $preWaveMute = _SoundGetWaveMute()
+Global $preVolume = _GetMasterVolumeLevelScalar()
 
 DrawGui()
 AdlibRegister("CheckAlarm", $intervalCheckingTime)
@@ -67,6 +63,7 @@ Func Pause()
 	$isActive = False
 	StopSoundAlarm()
 	StopBlinkWindow()
+	ResetVolume()
 EndFunc
 
 Func BlinkWindow()
@@ -119,17 +116,12 @@ Func StopSoundAlarm()
 EndFunc
 
 Func SetMaximumVolume()
-	_SoundSetMasterVolume($maxVolume)
-	_SoundSetMasterMute(0)
-	_SoundSetWaveVolume($maxVolume)
-	_SoundSetWaveMute(0)
+	Send("{VOLUME_UP}")	; Send VOLUME_UP key to prevent user from muting the speaker
+	_SetMasterVolumeLevelScalar(100)
 EndFunc
 
 Func ResetVolume()
-	_SoundSetMasterVolume($preMasterVolume)
-	_SoundSetMasterMute($preMasterMute)
-	_SoundSetWaveVolume($preWaveVolume)
-	_SoundSetWaveMute($preWaveMute)
+	_SetMasterVolumeLevelScalar($preVolume)
 EndFunc
 
 Func DisarmAndExit()
@@ -188,8 +180,9 @@ Func TrayMenu()
             Case $idAbout
                 MsgBox($MB_SYSTEMMODAL, "", "Alarm On AC Disconnect" & @CRLF & @CRLF & _
                         "Version: 0.1.0" & @CRLF & _
-                        "Created by Ha Ho <ha@dootech.com>")
-            Case $idExit
+                        "Created by Ha Ho <http://www.hoducha.com>")
+			Case $idExit
+				DisarmAndExit()
                 ExitLoop
         EndSwitch
     WEnd

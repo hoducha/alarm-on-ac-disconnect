@@ -5,8 +5,8 @@ This is a simple Windows program which will notify you when your computer AC pow
 
 ## Features ##
 	- Play sound when AC power is disconnected.
-	- Auto start when you lock your computer and stop when you logged on.
-	- Send email/SMS notifications. (coming soon)
+	- Auto start when you lock your computer and stop when you logged on. (in progress)
+	- Send email/SMS notifications. (backlog)
 
 ## Install
 Download the executable file in the ** dist ** directory.
