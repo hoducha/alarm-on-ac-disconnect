@@ -1,4 +1,7 @@
 #NoTrayIcon
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Icon=assets\AlarmOnACDisconnect.ico
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #include <MsgBoxConstants.au3>
 #include <WindowsConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -9,6 +12,16 @@
 #include <WinAPI.au3>
 #include <Sound.au3>
 #include <_AudioEndpointVolume.au3>
+
+If $CmdLine[0] = 1 Then
+	If $CmdLine[1] = "Exit" Then
+		ProcessClose("AlarmOnACDisconnect.exe")
+	Else
+		MsgBox($MB_SYSTEMMODAL, "Error", "Incorrect argument: " & $CmdLine[1])
+	EndIf
+
+	Exit
+Endif
 
 Const $maxVolume = 100	; from 0 to 100
 Const $intervalCheckingTime = 500	; milliseconds
